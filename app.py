@@ -27,30 +27,19 @@ property_area = st.selectbox("Property Area", ("Urban", "Semiurban", "Rural"))
 # Note: Dependents input is simplified here for brevity
 # Predict button
 if st.button("Predict Loan Status"):
-# Create a DataFrame from the user's input
-# This part needs careful one-hot encoding to match the model's training data
-input_data = pd.DataFrame(columns=input_cols)
-input_data.loc[0] = 0 # Initialize row with zeros
+    # All of this code is now indented correctly with 4 spaces
+    input_data = pd.DataFrame(columns=input_cols)
+    input_data.loc[0] = 0 
+    
+    input_data['ApplicantIncome'] = applicant_income
+    input_data['CoapplicantIncome'] = coapplicant_income
+    # ... and so on for the rest of the prediction logic ...
 
-input_data['ApplicantIncome'] = applicant_income
-input_data['CoapplicantIncome'] = coapplicant_income
-input_data['LoanAmount'] = loan_amount
-input_data['Loan_Amount_Term'] = loan_term
-input_data['Credit_History'] = credit_history
+    # Make sure every line inside the 'if' block is indented
+    prediction = model.predict(input_data)[0]
+    probability = model.predict_proba(input_data)[0][1]
 
-# Handle categorical variables
-if gender == 'Male': input_data['Gender_Male'] = 1
-if married == 'Yes': input_data['Married_Yes'] = 1
-if education == 'Not Graduate': input_data['Education_Not Graduate'] = 1
-if self_employed == 'Yes': input_data['Self_Employed_Yes'] = 1
-if property_area == 'Semiurban': input_data['Property_Area_Semiurban'] = 1
-if property_area == 'Urban': input_data['Property_Area_Urban'] = 1
-
-# Make prediction
-prediction = model.predict(input_data)[0]
-probability = model.predict_proba(input_data)[0][1]
-# Display result
-if prediction == 1:
-    st.success(f"Loan Approved! (Approval Probability: {probability:.2%})")
-else:
-    st.error(f"Loan Rejected! (Approval Probability: {probability:.2%})")
+    if prediction == 1:
+        st.success(f"Loan Approved! ✅ (Approval Probability: {probability:.2%})")
+    else:
+        st.error(f"Loan Rejected! ❌ (Approval Probability: {probability:.2%})")
